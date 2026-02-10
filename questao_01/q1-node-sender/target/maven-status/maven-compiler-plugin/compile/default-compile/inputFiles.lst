@@ -1,0 +1,8 @@
+/workspace/q1-node-sender/src/main/java/br/com/projeto/q1/sender/Q1SenderApplication.java
+/workspace/q1-node-sender/src/main/java/br/com/projeto/q1/sender/Q1SenderController.java
+/workspace/q1-node-sender/src/main/java/br/com/projeto/shared/config/AppProperties.java
+/workspace/q1-node-sender/src/main/java/br/com/projeto/shared/config/AppWiring.java
+/workspace/q1-node-sender/src/main/java/br/com/projeto/shared/messaging/MessageStore.java
+/workspace/q1-node-sender/src/main/java/br/com/projeto/shared/messaging/PostgresMessageStore.java
+/workspace/q1-node-sender/src/main/java/br/com/projeto/shared/processing/ProcessingResultEntity.java
+/workspace/q1-node-sender/src/main/java/br/com/projeto/shared/processing/ProcessingResultRepository.java

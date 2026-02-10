@@ -1,0 +1,4 @@
+br/com/projeto/q1/client/Q1ClientApplication.class
+br/com/projeto/q1/client/ClientAppController$SendAndForgetRequest.class
+br/com/projeto/q1/client/ClientAppController.class
+br/com/projeto/q1/client/ClientAppController$SendAndForgetResponse.class

@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: q1-node-client
+  profiles:
+    active: client
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+app:
+  sender:
+    base-url: ${APP_SENDER_BASEURL:http://localhost:8081}

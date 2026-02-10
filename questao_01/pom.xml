@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.3.5</version>
+    <relativePath/>
+  </parent>
+
+  <groupId>br.com.projeto</groupId>
+  <artifactId>questao-01</artifactId>
+  <version>1.0.0</version>
+  <packaging>pom</packaging>
+
+  <name>Questão 01 - Parent</name>
+  <description>Parent POM da Questão 01 (multi-módulo): agrupa módulos e centraliza propriedades.</description>
+
+  <modules>
+    <module>q1-shared</module>
+    <module>q1-node-client</module>
+    <module>q1-node-sender</module>
+    <module>q1-node-receiver</module>
+    <module>q1-node-server</module>
+  </modules>
+
+  <properties>
+    <java.version>21</java.version>
+    <maven.compiler.release>${java.version}</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+</project>

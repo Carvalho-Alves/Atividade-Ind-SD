@@ -1,0 +1,78 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: atividade_ind_sd
+      POSTGRES_USER: atividade
+      POSTGRES_PASSWORD: atividade
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # Q1/Q2/Q3 - Sender (REST + gRPC)
+  sender:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      SPRING_PROFILES_ACTIVE: sender
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/atividade_ind_sd
+      SPRING_DATASOURCE_USERNAME: atividade
+      SPRING_DATASOURCE_PASSWORD: atividade
+      APP_SENDER_BASEURL: http://sender:8080
+    ports:
+      - "8081:8080"
+      - "9091:9090"
+
+  # Q1/Q2/Q3 - ServerApp (processamento)
+  serverapp:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      SPRING_PROFILES_ACTIVE: serverapp
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/atividade_ind_sd
+      SPRING_DATASOURCE_USERNAME: atividade
+      SPRING_DATASOURCE_PASSWORD: atividade
+    ports:
+      - "8083:8080"
+      - "9093:9090"
+
+  # Q1/Q2/Q3 - Receiver (pulling via REST/gRPC e forwarding)
+  receiver:
+    build: .
+    depends_on:
+      - sender
+      - serverapp
+    environment:
+      SPRING_PROFILES_ACTIVE: receiver
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/atividade_ind_sd
+      SPRING_DATASOURCE_USERNAME: atividade
+      SPRING_DATASOURCE_PASSWORD: atividade
+
+      APP_SENDER_BASEURL: http://sender:8080
+      APP_SERVERAPP_BASEURL: http://serverapp:8080
+
+      GRPC_SENDER_ADDRESS: static://sender:9090
+      GRPC_SERVERAPP_ADDRESS: static://serverapp:9090
+    ports:
+      - "8082:8080"
+
+  # Q1 - ClientApp (simulador). Mantem um servidor HTTP para disparar send-and-forget.
+  clientapp:
+    build: .
+    depends_on:
+      - sender
+    environment:
+      SPRING_PROFILES_ACTIVE: client
+      APP_SENDER_BASEURL: http://sender:8080
+      GRPC_SENDER_ADDRESS: static://sender:9090
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/atividade_ind_sd
+      SPRING_DATASOURCE_USERNAME: atividade
+      SPRING_DATASOURCE_PASSWORD: atividade
+    ports:
+      - "8084:8080"
+
+volumes:
+  pgdata:

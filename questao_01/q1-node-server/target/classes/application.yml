@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: q1-node-server
+  profiles:
+    active: serverapp
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

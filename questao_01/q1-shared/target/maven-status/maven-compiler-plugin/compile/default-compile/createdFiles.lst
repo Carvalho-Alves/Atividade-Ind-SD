@@ -1,0 +1,3 @@
+br/com/projeto/shared/messaging/MessageChannel.class
+br/com/projeto/shared/messaging/MessageStatus.class
+br/com/projeto/shared/messaging/LeasedMessage.class

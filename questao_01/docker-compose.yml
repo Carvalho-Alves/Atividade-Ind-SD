@@ -1,0 +1,72 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: atividade_ind_sd
+      POSTGRES_USER: atividade
+      POSTGRES_PASSWORD: atividade
+    ports:
+      - "5432:5432"
+    volumes:
+      - q1-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U atividade -d atividade_ind_sd"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  sender:
+    build:
+      context: .
+      dockerfile: q1-node-sender/Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/atividade_ind_sd
+      SPRING_DATASOURCE_USERNAME: atividade
+      SPRING_DATASOURCE_PASSWORD: atividade
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8081:8080"
+
+  server:
+    build:
+      context: .
+      dockerfile: q1-node-server/Dockerfile
+    ports:
+      - "8083:8080"
+
+  receiver:
+    build:
+      context: .
+      dockerfile: q1-node-receiver/Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/atividade_ind_sd
+      SPRING_DATASOURCE_USERNAME: atividade
+      SPRING_DATASOURCE_PASSWORD: atividade
+      APP_SENDER_BASEURL: http://sender:8080
+      APP_SERVERAPP_BASEURL: http://server:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+      sender:
+        condition: service_started
+      server:
+        condition: service_started
+    ports:
+      - "8082:8080"
+
+  client:
+    build:
+      context: .
+      dockerfile: q1-node-client/Dockerfile
+    environment:
+      APP_SENDER_BASEURL: http://sender:8080
+    depends_on:
+      sender:
+        condition: service_started
+    ports:
+      - "8080:8080"
+
+volumes:
+  q1-postgres-data:

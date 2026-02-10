@@ -1,0 +1,14 @@
+br/com/projeto/shared/messaging/PostgresMessageStore.class
+br/com/projeto/shared/config/AppWiring.class
+br/com/projeto/q1/sender/Q1SenderApplication.class
+br/com/projeto/q1/sender/Q1SenderController$SendMessageResponse.class
+br/com/projeto/q1/sender/Q1SenderController.class
+br/com/projeto/shared/config/AppProperties.class
+br/com/projeto/shared/messaging/MessageStore.class
+br/com/projeto/shared/config/AppProperties$Receiver.class
+br/com/projeto/shared/processing/ProcessingResultRepository.class
+br/com/projeto/shared/config/AppProperties$Lease.class
+br/com/projeto/shared/processing/ProcessingResultEntity.class
+br/com/projeto/q1/sender/Q1SenderController$AckResponse.class
+br/com/projeto/q1/sender/Q1SenderController$SendMessageRequest.class
+br/com/projeto/q1/sender/Q1SenderController$TryDeliverResponse.class
