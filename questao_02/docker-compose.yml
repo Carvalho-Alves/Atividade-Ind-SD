@@ -1,0 +1,69 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: atividade_ind_sd_q2
+      POSTGRES_USER: atividade
+      POSTGRES_PASSWORD: atividade
+    ports:
+      - "5433:5432"
+    volumes:
+      - q2-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U atividade -d atividade_ind_sd_q2"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  sender:
+    build:
+      context: .
+      dockerfile: q2-node-sender/Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/atividade_ind_sd_q2
+      SPRING_DATASOURCE_USERNAME: atividade
+      SPRING_DATASOURCE_PASSWORD: atividade
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "9090:9090"
+
+  server:
+    build:
+      context: .
+      dockerfile: q2-node-server/Dockerfile
+    ports:
+      - "9091:9091"
+
+  receiver:
+    build:
+      context: .
+      dockerfile: q2-node-receiver/Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/atividade_ind_sd_q2
+      SPRING_DATASOURCE_USERNAME: atividade
+      SPRING_DATASOURCE_PASSWORD: atividade
+      GRPC_SENDER_ADDRESS: static://sender:9090
+      GRPC_SERVER_ADDRESS: static://server:9091
+    depends_on:
+      postgres:
+        condition: service_healthy
+      sender:
+        condition: service_started
+      server:
+        condition: service_started
+
+  client:
+    build:
+      context: .
+      dockerfile: q2-node-client/Dockerfile
+    environment:
+      GRPC_SENDER_ADDRESS: static://sender:9090
+      APP_CLIENT_PAYLOAD: "hello-from-compose"
+    depends_on:
+      sender:
+        condition: service_started
+
+volumes:
+  q2-postgres-data:

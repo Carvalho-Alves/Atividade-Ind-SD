@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: q2-node-sender
+  profiles:
+    active: sender
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/atividade_ind_sd}
+    username: ${SPRING_DATASOURCE_USERNAME:atividade}
+    password: ${SPRING_DATASOURCE_PASSWORD:atividade}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+
+  flyway:
+    enabled: true
+
+grpc:
+  server:
+    port: 9090
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+app:
+  lease:
+    lock-duration: PT30S
+    max-attempts: 10

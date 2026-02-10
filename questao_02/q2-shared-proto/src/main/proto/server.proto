@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package q2.server;
+
+option java_multiple_files = true;
+option java_package = "br.com.projeto.q2.proto.server";
+option java_outer_classname = "ServerProto";
+
+message ProcessRequest {
+  string message_id = 1;
+  string payload = 2;
+}
+
+message ProcessResponse {
+  string result = 1;
+}
+
+service ServerService {
+  // Receptor -> Servidor
+  rpc Process(ProcessRequest) returns (ProcessResponse);
+}
