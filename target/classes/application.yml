@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: atividade-ind-sd
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/atividade_ind_sd}
+    username: ${SPRING_DATASOURCE_USERNAME:atividade}
+    password: ${SPRING_DATASOURCE_PASSWORD:atividade}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+
+  flyway:
+    enabled: true
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+grpc:
+  server:
+    port: 9090
+
+app:
+  lease:
+    lock-duration: PT30S
+    max-attempts: 10
+  receiver:
+    poll-interval: PT2S
+  sender:
+    base-url: ${APP_SENDER_BASEURL:http://localhost:8081}
+  serverapp:
+    base-url: ${APP_SERVERAPP_BASEURL:http://localhost:8083}

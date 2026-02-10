@@ -1,0 +1,10 @@
+spring:
+  config:
+    activate:
+      on-profile: client
+
+grpc:
+  client:
+    sender:
+      address: ${GRPC_SENDER_ADDRESS:static://localhost:9091}
+      negotiationType: PLAINTEXT

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package atividade;
+
+option java_multiple_files = true;
+option java_package = "br.com.projeto.q2.grpc";
+
+message ProcessRequest {
+  string message_id = 1;
+  string payload = 2;
+  // Canal logico para usar a mesma API em Q2 e Q3.
+  string channel = 3;
+}
+
+message ProcessResponse {
+  string message_id = 1;
+  string result = 2;
+  // Q3: indica se o resultado veio de deduplicacao (idempotencia).
+  bool deduplicated = 3;
+}
+
+// ServerApp gRPC: processa mensagens encaminhadas pelo Receiver.
+service ServerAppGrpc {
+  rpc Process(ProcessRequest) returns (ProcessResponse);
+}

@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package atividade;
+
+option java_multiple_files = true;
+option java_package = "br.com.projeto.q2.grpc";
+
+message EnqueueRequest {
+  // Conteudo da mensagem (equivalente ao payload REST da Q1).
+  string payload = 1;
+
+  // Id opcional gerado pelo cliente para permitir idempotencia.
+  // Cenário: cliente cai e reenvia; o Sender devolve o mesmo ID.
+  string client_message_id = 2;
+
+  // Canal logico. Para Q2 use "Q2_GRPC"; para Q3 use "Q3_PUSH".
+  string channel = 3;
+}
+
+message EnqueueResponse {
+  string message_id = 1;
+}
+
+message TryDeliverRequest {
+  string receiver_id = 1;
+  string channel = 2;
+}
+
+message TryDeliverResponse {
+  bool found = 1;
+  string message_id = 2;
+  string payload = 3;
+  int32 attempt_count = 4;
+  string lock_owner = 5;
+  string locked_until = 6;
+}
+
+message AckRequest {
+  string receiver_id = 1;
+  string message_id = 2;
+}
+
+message AckResponse {
+  bool acked = 1;
+}
+
+message NackRequest {
+  string receiver_id = 1;
+  string message_id = 2;
+  string error = 3;
+}
+
+message NackResponse {
+  bool nacked = 1;
+}
+
+// Q3 - "Push notification": o Receiver se inscreve e recebe "dicas" de novas mensagens.
+message SubscribeRequest {
+  string receiver_id = 1;
+  string channel = 2;
+}
+
+message DeliveryHint {
+  // Dica simples: "NEW_MESSAGE".
+  // A entrega real continua via TryDeliver/ACK para manter semântica de mailbox.
+  string hint = 1;
+}
+
+// Sender gRPC: armazena mensagens e suporta pulling/ack.
+service SenderGrpc {
+  rpc Enqueue(EnqueueRequest) returns (EnqueueResponse);
+  rpc TryDeliver(TryDeliverRequest) returns (TryDeliverResponse);
+  rpc Ack(AckRequest) returns (AckResponse);
+  rpc Nack(NackRequest) returns (NackResponse);
+
+  // Q3: push notifications via stream.
+  rpc Subscribe(SubscribeRequest) returns (stream DeliveryHint);
+}
