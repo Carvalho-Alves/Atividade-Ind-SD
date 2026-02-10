@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: q3-node-server
+  profiles:
+    active: server
+
+grpc:
+  server:
+    port: 9091
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

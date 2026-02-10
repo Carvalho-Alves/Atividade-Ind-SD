@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: q3-node-client
+  profiles:
+    active: client
+
+grpc:
+  client:
+    sender:
+      address: ${GRPC_SENDER_ADDRESS:static://localhost:9090}
+      negotiationType: PLAINTEXT
+
+app:
+  client:
+    payload: ${APP_CLIENT_PAYLOAD:hello-q3}

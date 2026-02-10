@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: q3-node-receiver
+  profiles:
+    active: receiver
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/atividade_ind_sd}
+    username: ${SPRING_DATASOURCE_USERNAME:atividade}
+    password: ${SPRING_DATASOURCE_PASSWORD:atividade}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+
+  flyway:
+    enabled: true
+
+grpc:
+  client:
+    sender:
+      address: ${GRPC_SENDER_ADDRESS:static://localhost:9090}
+      negotiationType: PLAINTEXT
+    server:
+      address: ${GRPC_SERVER_ADDRESS:static://localhost:9091}
+      negotiationType: PLAINTEXT
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+app:
+  lease:
+    lock-duration: PT30S
+    max-attempts: 10

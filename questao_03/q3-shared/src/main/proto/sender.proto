@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package q3.sender;
+
+option java_multiple_files = true;
+option java_package = "br.com.projeto.q3.proto.sender";
+option java_outer_classname = "SenderProto";
+
+message SendMessageRequest {
+  string payload = 1;
+}
+
+message SendMessageResponse {
+  string message_id = 1;
+}
+
+message SubscribeRequest {
+  string receiver_id = 1;
+}
+
+message PushedMessage {
+  string message_id = 1;
+  string payload = 2;
+  string lease_token = 3;
+  int64 leased_until_epoch_millis = 4;
+  int32 attempt = 5;
+}
+
+message AckMessageRequest {
+  string message_id = 1;
+  string lease_token = 2;
+}
+
+message AckMessageResponse {
+  bool acked = 1;
+}
+
+message NackMessageRequest {
+  string message_id = 1;
+  string lease_token = 2;
+  string error = 3;
+}
+
+message NackMessageResponse {
+  bool nacked = 1;
+}
+
+service SenderService {
+  // Cliente -> Emissor
+  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
+
+  // Receptor -> Emissor (push via server-streaming)
+  rpc Subscribe(SubscribeRequest) returns (stream PushedMessage);
+
+  // Receptor -> Emissor (ACK/NACK)
+  rpc AckMessage(AckMessageRequest) returns (AckMessageResponse);
+  rpc NackMessage(NackMessageRequest) returns (NackMessageResponse);
+}
